@@ -5,7 +5,7 @@ Stress test your database with random or pre-defined queries. Validate slow and 
 ## Installation
 
 ```shell
-go install github.com/adaptive-scale/dbchaos@latest
+go install github.com/adaptive-scale/dbchaos@v0.4.1
 ```
 
 ## Run your first test
