@@ -13,7 +13,9 @@ import (
 var rootCmd = &cobra.Command{
 	Use:   "dbchaos",
 	Short: "DBChaos allows users to run queries in parallel on the database",
-	Long:  `DBChaos allows users to run queries in parallel on the database`,
+	Long: `DBChaos allows users to run queries in parallel on the database.
+dbchaos -h for help
+`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
