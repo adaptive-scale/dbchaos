@@ -1,6 +1,5 @@
 /*
 Copyright © 2023 NAME HERE <EMAIL ADDRESS>
-
 */
 package cmd
 
@@ -18,7 +17,7 @@ var runTestCmd = &cobra.Command{
 	Short: "Execute a test on DB",
 	Long: `Execute a test on DB.
 
-Create a file name `config.yaml` with the following content:
+Create a file name config.yaml with the following content:
 
 dbType: postgres
 connection: "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
