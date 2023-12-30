@@ -1,4 +1,10 @@
 # DBChaos
 
-Stress test your database with random or pre-defined queries. Check at what point the slow queries break your DB.
+Stress test your database with random or pre-defined queries. Validate slow and expensive queries breaking your DB.
 
+
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
