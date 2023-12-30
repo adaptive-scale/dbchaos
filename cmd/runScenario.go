@@ -14,13 +14,29 @@ import (
 // runScenarioCmd represents the runScenario command
 var runScenarioCmd = &cobra.Command{
 	Use:   "runScenario",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Execute a scenario",
+	Long: `Execute a scenario.
+A scenario is a collection of tests that can be run in parallel.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Create a file called scenario.yaml with the following content:
+
+dbType: mysql
+connection: "root:root@tcp(host:port)/db"
+scenarios:
+  - query: select * from information_schema.statistics
+	parallelRuns: 10000
+	runFor: 15m
+  - query: |
+      SELECT table_schema "Database",
+	  ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) "Size (MB)"
+	  FROM information_schema.tables
+	  GROUP BY table_schema;
+	parallelRuns: 10000
+	runFor: 15m
+
+Run as follows:
+dbchaos runScenario
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		d, err := os.ReadFile("./scenario.yaml")
 		if err != nil {

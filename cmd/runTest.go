@@ -15,13 +15,24 @@ import (
 // runTestCmd represents the runTest command
 var runTestCmd = &cobra.Command{
 	Use:   "runTest",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "Execute a test on DB",
+	Long: `Execute a test on DB.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Create a file name `config.yaml` with the following content:
+
+dbType: postgres
+connection: "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
+query: |
+	SELECT pg_database.datname as "Database", pg_size_pretty(pg_database_size(pg_database.datname)) as "Size"
+	FROM pg_database;
+parallelRuns: 100
+runFor: 30m
+
+To run the above config file:
+
+dbchaos runTest config.yaml
+
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		d, err := os.ReadFile("./config.yaml")
 		if err != nil {
