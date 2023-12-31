@@ -1,6 +1,6 @@
 # DBChaos
 
-Stress test your database with random or pre-defined queries. Validate slow and expensive queries breaking your DB.
+Stress-test your database with random or pre-defined queries. Validate slow and expensive queries that break your database.
 
 ## Installation
 
@@ -39,10 +39,9 @@ scenarios:
     parallelRuns: 10000
     runFor: 15m
   - query: |
-        SELECT table_schema "Database",
-        ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) "Size (MB)"
-        FROM information_schema.tables
-        GROUP BY table_schema;
+      SELECT table_schema "Database", ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) "Size (MB)"
+      FROM information_schema.tables
+      GROUP BY table_schema;
     parallelRuns: 10000
     runFor: 15m
 ```
