@@ -3,7 +3,7 @@
 Stress-test your database with random, pre-defined queries or your audit log. 
 
 **Usecases** 
-- Validate slow and expensive queries that break your database.
+- Validate slow and expensive queries that breaks your database.
 - Replay your audit log on the DB to reproduce errors and states.
   
 ## Installation
