@@ -6,13 +6,13 @@ Stress-test your database with random, pre-defined queries or your audit log.
 - Validate slow and expensive queries that breaks your database.
 - Replay your audit log on the DB to reproduce errors and states.
   
-## Installation
+### Installation
 
 ```shell
 go install github.com/adaptive-scale/dbchaos@v0.4.1
 ```
 
-## Run your first test
+### Run your first test
 
 Create a file name `config.yaml` with the following content:
 ```yaml
@@ -31,7 +31,7 @@ To run the above config file:
 dbchaos runTest config.yaml
 ```
 
-## Run bunch of queries in parallel
+### Run bunch of queries in parallel
 
 Create a file called `scenario.yaml` with the following content:
 
