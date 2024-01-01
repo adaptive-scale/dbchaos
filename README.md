@@ -1,6 +1,6 @@
 # DBChaos
 
-Stress-test your database with random, pre-defined queries or your audit log. Validate slow and expensive queries that breaks your database.
+Stress-test your database with pre-defined queries. Validate slow and expensive queries that breaks your database.
   
 ### Installation
 
