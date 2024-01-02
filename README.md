@@ -24,7 +24,7 @@ runFor: 30m
 To run the above config file:
 
 ```shell
-dbchaos runTest config.yaml
+dbchaos runTest 
 ```
 
 ### Run bunch of queries in parallel
@@ -49,5 +49,5 @@ scenarios:
 To run the above scenario file:
 
 ```shell
-dbchaos runScenario scenario.yaml
+dbchaos runScenario 
 ```
