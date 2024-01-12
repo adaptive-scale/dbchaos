@@ -35,9 +35,9 @@ func (s *Scenario) Start() {
 		}
 
 		go func(a SimpleConfiguration) {
+			defer wg.Done()
 			if err := a.Start(); err != nil {
 				log.Println(err)
-				wg.Done()
 				return
 			}
 		}(a)
