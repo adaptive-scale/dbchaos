@@ -1,15 +1,24 @@
 package config
 
 import (
-	"gopkg.in/yaml.v3"
 	"log"
 	"sync"
+
+	"gopkg.in/yaml.v3"
 )
 
 type Scenario struct {
 	Scenarios        []SimpleConfiguration `json:"scenarios" yaml:"scenarios"`
 	DbType           string                `json:"db_type" yaml:"dbType"`
 	ConnectionString string                `json:"connection_string" yaml:"connection"`
+	DbName           string                `json:"db_name" yaml:"dbName"`                   // Applies to NoSQL Databases Only
+	Collection       string                `json:"collection" yaml:"collection"`            // Applies to NoSQL Databases Only
+	QueryType        string                `json:"query_type" yaml:"queryType"`             // Applies to MongoDB Only
+	SortQuery        string                `json:"sort_query" yaml:"sortQuery"`             // Applies to MongoDB Only
+	SkipNumber       int                   `json:"skip_number" yaml:"skipNumber"`           // Applies to MongoDB Only
+	LimitNumber      int                   `json:"limit_number" yaml:"limitNumber"`         // Applies to MongoDB Only
+	ProjectionQuery  string                `json:"projection_query" yaml:"projectionQuery"` // Applies to MongoDB Only
+	Docs             string                `json:"docs" yaml:"docs"`                        // Applies to NoSQL Databases Only
 }
 
 func ParseScenario(config []byte) *Scenario {

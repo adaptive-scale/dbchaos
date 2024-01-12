@@ -4,9 +4,10 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
-	"github.com/adaptive-scale/dbchaos/pkg/config"
 	"log"
 	"os"
+
+	"github.com/adaptive-scale/dbchaos/pkg/config"
 
 	"github.com/spf13/cobra"
 )
@@ -20,10 +21,17 @@ var runTestCmd = &cobra.Command{
 Create a file name config.yaml with the following content:
 
 dbType: postgres
+dbName: some_database #(NoSQL Databases Only)
+collection: some_collection #(NoSQL Databases Only)
+queryType: find #(MongoDB Only; Options: [find, insertmany, findone, ])
+sortQuery: '{"date_ordered": 1}' #(MongoDB Only)
+skipNumber: 10 #(MongoDB Only; Number of documents to skip)
+limitNumber: 10 #(MongoDB Only: Max number of documents to return)
+projectionQuery: '[{"item": 1}, {"rating": 1}]' #(MongoDB Only; project only these fields of matched documents)
 connection: "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
 query: |
 	SELECT pg_database.datname as "Database", pg_size_pretty(pg_database_size(pg_database.datname)) as "Size"
-	FROM pg_database;
+	FROM pg_database; # For MongoDB provide JSON string: '{"$and": [{"rating": {"$gt": 7}}, {"rating": {"$lte", 10}]}'
 parallelRuns: 100
 runFor: 30m
 

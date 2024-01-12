@@ -1,13 +1,18 @@
 package runner
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
-	"github.com/google/uuid"
-	"gorm.io/gorm"
 	"log"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"gorm.io/gorm"
 )
 
 type DurationRunner struct {
@@ -16,7 +21,17 @@ type DurationRunner struct {
 	ParallelRuns     int
 	CoolOffTime      int
 	DB               *gorm.DB
+	MongoDB          *mongo.Client
 	RequestPerSecond int64
+	DbType           string
+	DbName           string // NoSQL Databases Only
+	Collection       string // NoSQL Databases Only
+	QueryType        string // Applies to MongoDB Only
+	SortQuery        string // Applies to MongoDB Only
+	SkipNumber       int    // Applies to MongoDB Only
+	LimitNumber      int    // Applies to MongoDB Only
+	ProjectionQuery  string // Applies to MongoDB Only
+	Docs             string // Applies to NoSQL Databases Only
 }
 
 func (d *DurationRunner) Run() error {
@@ -44,8 +59,46 @@ func (d *DurationRunner) Run() error {
 				a := strings.Split(d.Query, ";")
 				for _, a1 := range a {
 					if strings.TrimSpace(a1) != "" {
-						if err := d.DB.Raw(a1).Scan(&v).Error; err != nil {
-							log.Println(err)
+						if d.DbType == "mongodb" {
+							var filter interface{}
+							if d.Query != "" {
+								err := bson.UnmarshalExtJSON([]byte(d.Query), true, &filter)
+								if err != nil {
+									log.Println(err)
+								}
+							}
+							var docs []interface{}
+							if d.Docs != "" {
+								err := json.Unmarshal([]byte(d.Docs), &docs)
+								if err != nil {
+									log.Println(err)
+								}
+							}
+							db := d.MongoDB.Database(d.DbName).Collection(d.Collection)
+							switch d.QueryType {
+							case "find":
+								{
+									_, err := db.Find(context.TODO(), filter)
+									if err != nil {
+										log.Println(err)
+									}
+								}
+							case "findone":
+								{
+									_ = db.FindOne(context.TODO(), filter)
+								}
+							case "insertmany":
+								{
+									_, err := db.InsertMany(context.TODO(), docs)
+									if err != nil {
+										log.Println(err)
+									}
+								}
+							}
+						} else {
+							if err := d.DB.Raw(a1).Scan(&v).Error; err != nil {
+								log.Println(err)
+							}
 						}
 					}
 				}
