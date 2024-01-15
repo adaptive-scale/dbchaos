@@ -32,21 +32,21 @@ type Randomize struct {
 }
 
 type SimpleConfiguration struct {
-	DbType           string    `json:"db_type" yaml:"dbType"`
-	DbName           string    `json:"db_name" yaml:"dbName"`
-	Collection       string    `json:"collection" yaml:"collection"`
-	ConnectionString string    `json:"connection_string" yaml:"connection,omitempty"`
-	Query            string    `json:"query" yaml:"query"`
-	ParallelRuns     int       `json:"parallel_runs" yaml:"parallelRuns,omitempty"`
-	RunFor           string    `json:"run_for" yaml:"runFor,omitempty"`
-	CoolOffTime      int       `json:"coolOffTime" yaml:"coolOffTime,omitempty"`
-	Randomize        Randomize `json:"randomize" yaml:"randomize,omitempty"`
-	QueryType        string    `json:"query_type" yaml:"queryType"`             // Applies to MongoDB Only
-	SortQuery        string    `json:"sort_query" yaml:"sortQuery"`             // Applies to MongoDB Only
-	SkipNumber       int       `json:"skip_number" yaml:"skipNumber"`           // Applies to MongoDB Only
-	LimitNumber      int       `json:"limit_number" yaml:"limitNumber"`         // Applies to MongoDB Only
-	ProjectionQuery  string    `json:"projection_query" yaml:"projectionQuery"` // Applies to MongoDB Only
-	Docs             string    `json:"docs" yaml:"docs"`                        // Applies to NoSQL Databases Only
+	DbType           string        `json:"db_type" yaml:"dbType"`
+	DbName           string        `json:"db_name" yaml:"dbName"`
+	Collection       string        `json:"collection" yaml:"collection"`
+	ConnectionString string        `json:"connection_string" yaml:"connection,omitempty"`
+	Query            string        `json:"query" yaml:"query"`
+	ParallelRuns     int           `json:"parallel_runs" yaml:"parallelRuns,omitempty"`
+	RunFor           string        `json:"run_for" yaml:"runFor,omitempty"`
+	CoolOffTime      int           `json:"coolOffTime" yaml:"coolOffTime,omitempty"`
+	Randomize        Randomize     `json:"randomize" yaml:"randomize,omitempty"`
+	QueryType        string        `json:"query_type" yaml:"queryType"`             // Applies to MongoDB Only
+	SortQuery        string        `json:"sort_query" yaml:"sortQuery"`             // Applies to MongoDB Only
+	SkipNumber       int           `json:"skip_number" yaml:"skipNumber"`           // Applies to MongoDB Only
+	LimitNumber      int           `json:"limit_number" yaml:"limitNumber"`         // Applies to MongoDB Only
+	ProjectionQuery  string        `json:"projection_query" yaml:"projectionQuery"` // Applies to MongoDB Only
+	Docs             []interface{} `json:"docs" yaml:"docs"`                        // Applies to NoSQL Databases Only
 	//RequestPerSecond int64     `yaml:"requestPerSecond" json:"requestPerSecond"`
 }
 

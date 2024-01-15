@@ -24,7 +24,7 @@ Create a file called scenario.yaml with the following content:
 dbType: mysql
 connection: "root:root@tcp(host:port)/db"
 scenarios:
-  - query: select * from information_schema.statistics
+  - query: select * from information_schema.statistics # (for MongoDB, query must be valid JSON ex: '{"gender": "Female"}')
 	parallelRuns: 10000
 	runFor: 15m
   - query: |
@@ -34,33 +34,19 @@ scenarios:
 	  GROUP BY table_schema;
 	parallelRuns: 10000
 	runFor: 15m
-dbName: some_database #(NoSQL Databases only)
-collection: some_collection #(NoSQL Databases only)
-queryType: find #(MongoDB Only; Options: [find, insertmany, findone, ])
-sortQuery: '{"date_ordered": 1}' #(MongoDB Only)
-skipNumber: 10 #(MongoDB Only; Number of documents to skip)
-limitNumber: 10 #(MongoDB Only: Max number of documents to return)
-projectionQuery: '[{"item": 1}, {"rating": 1}]' #(MongoDB Only; project only these fields of matched documents)
-docs: '[
-	{
-	"_id": 1,
-	"Field Str": "Hi",
-	"Field Int": 12345,
-	"Field Bool": true
-	},
-	{
-	"_id": 2,
-	"Field Str": "Hallo Welt",
-	"Field Int": 42,
-	"Field Bool": false
-	},
-	{
-	"_id": 3,
-	"Field Str": "Hello, world",
-	"Field Int": 98765,
-	"Field Bool": true
-	}
-	]' #(NoSQL Databases Only)
+dbName: users   #(NoSQL Databases only)
+collection: users # (NoSQL Databases only)
+queryType: find   #(MongoDB Only; Options: [find, insertmany, findone, ])
+sortQuery: '{"gender": "Female"}' #(MongoDB Only)
+skipNumber: 10  #(MongoDB Only; Number of documents to skip)
+limitNumber: 10   #(MongoDB Only: Max number of documents to return)
+projectionQuery: '[{"last_name": 1}, {"gender": 1}]' #(MongoDB Only; project only these fields of matched documents)
+docs: 
+	- _id: 1,
+	fieldStr: Hi
+	- _id: 1,
+	fieldStr: Hi
+	#(NoSQL Databases Only)
 
 
 Run as follows:

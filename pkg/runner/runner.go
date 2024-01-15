@@ -2,7 +2,6 @@ package runner
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"strings"
@@ -24,14 +23,14 @@ type DurationRunner struct {
 	MongoDB          *mongo.Client
 	RequestPerSecond int64
 	DbType           string
-	DbName           string // NoSQL Databases Only
-	Collection       string // NoSQL Databases Only
-	QueryType        string // Applies to MongoDB Only
-	SortQuery        string // Applies to MongoDB Only
-	SkipNumber       int    // Applies to MongoDB Only
-	LimitNumber      int    // Applies to MongoDB Only
-	ProjectionQuery  string // Applies to MongoDB Only
-	Docs             string // Applies to NoSQL Databases Only
+	DbName           string        // NoSQL Databases Only
+	Collection       string        // NoSQL Databases Only
+	QueryType        string        // Applies to MongoDB Only
+	SortQuery        string        // Applies to MongoDB Only
+	SkipNumber       int           // Applies to MongoDB Only
+	LimitNumber      int           // Applies to MongoDB Only
+	ProjectionQuery  string        // Applies to MongoDB Only
+	Docs             []interface{} // Applies to NoSQL Databases Only
 }
 
 func (d *DurationRunner) Run() error {
@@ -67,13 +66,6 @@ func (d *DurationRunner) Run() error {
 									log.Println(err)
 								}
 							}
-							var docs []interface{}
-							if d.Docs != "" {
-								err := json.Unmarshal([]byte(d.Docs), &docs)
-								if err != nil {
-									log.Println(err)
-								}
-							}
 							db := d.MongoDB.Database(d.DbName).Collection(d.Collection)
 							switch d.QueryType {
 							case "find":
@@ -89,7 +81,7 @@ func (d *DurationRunner) Run() error {
 								}
 							case "insertmany":
 								{
-									_, err := db.InsertMany(context.TODO(), docs)
+									_, err := db.InsertMany(context.TODO(), d.Docs)
 									if err != nil {
 										log.Println(err)
 									}

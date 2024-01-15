@@ -18,7 +18,7 @@ type Scenario struct {
 	SkipNumber       int                   `json:"skip_number" yaml:"skipNumber"`           // Applies to MongoDB Only
 	LimitNumber      int                   `json:"limit_number" yaml:"limitNumber"`         // Applies to MongoDB Only
 	ProjectionQuery  string                `json:"projection_query" yaml:"projectionQuery"` // Applies to MongoDB Only
-	Docs             string                `json:"docs" yaml:"docs"`                        // Applies to NoSQL Databases Only
+	Docs             []interface{}         `json:"docs" yaml:"docs"`                        // Applies to NoSQL Databases Only
 }
 
 func ParseScenario(config []byte) *Scenario {
@@ -42,6 +42,15 @@ func (s *Scenario) Start() {
 		if a.ConnectionString == "" {
 			a.ConnectionString = s.ConnectionString
 		}
+
+		a.Collection = s.Collection
+		a.DbName = s.DbName
+		a.Docs = s.Docs
+		a.QueryType = s.QueryType
+		a.LimitNumber = s.LimitNumber
+		a.ProjectionQuery = s.ProjectionQuery
+		a.SortQuery = s.SortQuery
+		a.SkipNumber = s.SkipNumber
 
 		go func(a SimpleConfiguration) {
 			defer wg.Done()
