@@ -51,3 +51,15 @@ To run the above scenario file:
 ```shell
 dbchaos runScenario 
 ```
+
+### MongoDB Specific:
+Example `scenario.yaml` file: 
+```yaml
+dbType: mongodb
+connection: "mongodb://root:example@localhost:27017/"
+scenarios:
+  - query: '{"insert": "users", "documents": [{ "user": "abc123", "status": "A" }]}'
+    parallelRuns: 10000
+    runFor: 15m
+dbName: users   #(MongoDB only)
+```
