@@ -1,13 +1,14 @@
 package config
 
 import (
+	"time"
+
 	"github.com/adaptive-scale/dbchaos/pkg/runner"
 	"gopkg.in/yaml.v3"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
-	"time"
 )
 
 const (
