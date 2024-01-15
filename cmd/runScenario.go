@@ -24,7 +24,7 @@ Create a file called scenario.yaml with the following content:
 dbType: mysql
 connection: "root:root@tcp(host:port)/db"
 scenarios:
-  - query: select * from information_schema.statistics # (for MongoDB, query must be valid JSON ex: '{"gender": "Female"}')
+  - query: select * from information_schema.statistics # (for MongoDB, query must be valid JSON ex: '{"insert": "users", "documents": [{ "user": "abc123", "status": "A" }]}')
 	parallelRuns: 10000
 	runFor: 15m
   - query: |
@@ -34,20 +34,7 @@ scenarios:
 	  GROUP BY table_schema;
 	parallelRuns: 10000
 	runFor: 15m
-dbName: users   #(NoSQL Databases only)
-collection: users # (NoSQL Databases only)
-queryType: find   #(MongoDB Only; Options: [find, insertmany, findone, ])
-sortQuery: '{"gender": "Female"}' #(MongoDB Only)
-skipNumber: 10  #(MongoDB Only; Number of documents to skip)
-limitNumber: 10   #(MongoDB Only: Max number of documents to return)
-projectionQuery: '[{"last_name": 1}, {"gender": 1}]' #(MongoDB Only; project only these fields of matched documents)
-docs: 
-	- _id: 1,
-	fieldStr: Hi
-	- _id: 1,
-	fieldStr: Hi
-	#(NoSQL Databases Only)
-
+dbName: users   #(MongoDB only)
 
 Run as follows:
 dbchaos runScenario

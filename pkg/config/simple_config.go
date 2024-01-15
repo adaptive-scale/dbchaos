@@ -118,15 +118,8 @@ func (s *SimpleConfiguration) Start() error {
 					MongoDB:      client,
 					DbType:       s.DbType,
 					DbName:       s.DbName,
-					Collection:   s.Collection,
 					//RequestPerSecond: s.RequestPerSecond,
-					Query:           s.Query,
-					QueryType:       s.QueryType,
-					SortQuery:       s.SortQuery,
-					SkipNumber:      s.SkipNumber,
-					LimitNumber:     s.LimitNumber,
-					ProjectionQuery: s.ProjectionQuery,
-					Docs:            s.Docs,
+					Query: s.Query,
 				}
 				return dur.Run()
 			}

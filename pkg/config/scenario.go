@@ -43,14 +43,7 @@ func (s *Scenario) Start() {
 			a.ConnectionString = s.ConnectionString
 		}
 
-		a.Collection = s.Collection
 		a.DbName = s.DbName
-		a.Docs = s.Docs
-		a.QueryType = s.QueryType
-		a.LimitNumber = s.LimitNumber
-		a.ProjectionQuery = s.ProjectionQuery
-		a.SortQuery = s.SortQuery
-		a.SkipNumber = s.SkipNumber
 
 		go func(a SimpleConfiguration) {
 			defer wg.Done()
