@@ -30,7 +30,7 @@ runFor: 30m
 
 For MongoDB, the connection string should be in the following format:
 ```yaml
-dbType: postgres
+dbType: mongodb
 connection: "mongodb://root:example@localhost:27017/"
 query: |
     {"insert": "users", "documents": [{ "user": "abc123", "status": "A" }]}
