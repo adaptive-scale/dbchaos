@@ -4,10 +4,11 @@ Copyright © 2023 Debarshi Basak <debarshi@adaptive.live>
 package cmd
 
 import (
-	"github.com/adaptive-scale/dbchaos/pkg/config"
+	"fmt"
 	"log"
 	"os"
 
+	"github.com/adaptive-scale/dbchaos/pkg/config"
 	"github.com/spf13/cobra"
 )
 
@@ -20,10 +21,11 @@ var runTestCmd = &cobra.Command{
 Create a file name config.yaml with the following content:
 
 dbType: postgres
+dbName: some_database #(NoSQL Databases Only)
 connection: "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
 query: |
 	SELECT pg_database.datname as "Database", pg_size_pretty(pg_database_size(pg_database.datname)) as "Size"
-	FROM pg_database;
+	FROM pg_database; # For MongoDB provide JSON string: '{"$and": [{"rating": {"$gt": 7}}, {"rating": {"$lte", 10}]}' # (for MongoDB query must be valid JSON ex: '{"insert": "users", "documents": [{ "user": "abc123", "status": "A" }]}')
 parallelRuns: 100
 runFor: 30m
 
@@ -33,9 +35,22 @@ dbchaos runTest config.yaml
 
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		d, err := os.ReadFile("./config.yaml")
+		file, err := cmd.Flags().GetString("file")
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		var d []byte
+		if file != "" {
+			d, err = os.ReadFile(file)
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else {
+			d, err = os.ReadFile("./config.yaml")
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 		s1 := config.ParseConfiguration(d)
 		err = s1.Start()
@@ -46,6 +61,8 @@ dbchaos runTest config.yaml
 }
 
 func init() {
+	runTestCmd.PersistentFlags().String("file", "config.yaml", "Config yaml file to use")
+
 	rootCmd.AddCommand(runTestCmd)
 
 	// Here you will define your flags and configuration settings.

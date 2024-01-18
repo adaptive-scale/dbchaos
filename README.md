@@ -1,16 +1,16 @@
 # DBChaos
 
-Stress-test your database with random or pre-defined queries. Validate slow and expensive queries that break your database.
-
-## Installation
+Stress-test your database with pre-defined queries. Validate slow and expensive queries that breaks your database.
+  
+### Installation
 
 ```shell
 go install github.com/adaptive-scale/dbchaos@v0.4.1
 ```
 
-## Run your first test
+### Run your first test
 
-Create a file name `config.yaml` with the following content:
+Create a file named `config.yaml` with the following content:
 ```yaml
 dbType: postgres
 connection: "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
@@ -24,10 +24,10 @@ runFor: 30m
 To run the above config file:
 
 ```shell
-dbchaos runTest config.yaml
+dbchaos runTest 
 ```
 
-## Run bunch of queries in parallel
+### Run bunch of queries in parallel
 
 Create a file called `scenario.yaml` with the following content:
 
@@ -49,5 +49,17 @@ scenarios:
 To run the above scenario file:
 
 ```shell
-dbchaos runScenario scenario.yaml
+dbchaos runScenario 
+```
+
+### MongoDB Specific:
+Example `scenario.yaml` file: 
+```yaml
+dbType: mongodb
+connection: "mongodb://root:example@localhost:27017/"
+scenarios:
+  - query: '{"insert": "users", "documents": [{ "user": "abc123", "status": "A" }]}'
+    parallelRuns: 10000
+    runFor: 15m
+dbName: users   #(MongoDB only)
 ```
