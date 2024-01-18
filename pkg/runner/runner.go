@@ -1,13 +1,17 @@
 package runner
 
 import (
+	"context"
 	"fmt"
-	"github.com/google/uuid"
-	"gorm.io/gorm"
 	"log"
 	"strings"
 	"sync"
 	"time"
+
+	"github.com/google/uuid"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/mongo"
+	"gorm.io/gorm"
 )
 
 type DurationRunner struct {
@@ -16,7 +20,10 @@ type DurationRunner struct {
 	ParallelRuns     int
 	CoolOffTime      int
 	DB               *gorm.DB
+	MongoDB          *mongo.Client
 	RequestPerSecond int64
+	DbType           string
+	DbName           string // NoSQL Databases Only
 }
 
 func (d *DurationRunner) Run() error {
@@ -44,8 +51,19 @@ func (d *DurationRunner) Run() error {
 				a := strings.Split(d.Query, ";")
 				for _, a1 := range a {
 					if strings.TrimSpace(a1) != "" {
-						if err := d.DB.Raw(a1).Scan(&v).Error; err != nil {
-							log.Println(err)
+						if d.DbType == "mongodb" {
+							var filter interface{}
+							if d.Query != "" {
+								err := bson.UnmarshalExtJSON([]byte(d.Query), true, &filter)
+								if err != nil {
+									log.Println(err)
+								}
+							}
+							d.MongoDB.Database(d.DbName).RunCommand(context.TODO(), filter)
+						} else {
+							if err := d.DB.Raw(a1).Scan(&v).Error; err != nil {
+								log.Println(err)
+							}
 						}
 					}
 				}

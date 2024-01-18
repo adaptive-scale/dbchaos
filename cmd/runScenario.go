@@ -24,7 +24,7 @@ Create a file called scenario.yaml with the following content:
 dbType: mysql
 connection: "root:root@tcp(host:port)/db"
 scenarios:
-  - query: select * from information_schema.statistics
+  - query: select * from information_schema.statistics # (for MongoDB, query must be valid JSON ex: '{"insert": "users", "documents": [{ "user": "abc123", "status": "A" }]}')
 	parallelRuns: 10000
 	runFor: 15m
   - query: |
@@ -34,6 +34,7 @@ scenarios:
 	  GROUP BY table_schema;
 	parallelRuns: 10000
 	runFor: 15m
+dbName: users   #(MongoDB only)
 
 Run as follows:
 dbchaos runScenario

@@ -21,10 +21,11 @@ var runTestCmd = &cobra.Command{
 Create a file name config.yaml with the following content:
 
 dbType: postgres
+dbName: some_database #(NoSQL Databases Only)
 connection: "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
 query: |
 	SELECT pg_database.datname as "Database", pg_size_pretty(pg_database_size(pg_database.datname)) as "Size"
-	FROM pg_database;
+	FROM pg_database; # For MongoDB provide JSON string: '{"$and": [{"rating": {"$gt": 7}}, {"rating": {"$lte", 10}]}' # (for MongoDB query must be valid JSON ex: '{"insert": "users", "documents": [{ "user": "abc123", "status": "A" }]}')
 parallelRuns: 100
 runFor: 30m
 
