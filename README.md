@@ -8,6 +8,13 @@ Stress-test your database with pre-defined queries. Validate slow and expensive 
 go install github.com/adaptive-scale/dbchaos@v0.4.1
 ```
 
+#### Supported Databases
+
+- Postgres
+- MySQL
+- MongoDB
+- SQL Server
+
 ### Run your first test
 
 Create a file named `config.yaml` with the following content:
@@ -17,6 +24,16 @@ connection: "host=localhost port=5432 user=postgres password=postgres dbname=pos
 query: |
   SELECT pg_database.datname as "Database", pg_size_pretty(pg_database_size(pg_database.datname)) as "Size"
   FROM pg_database;
+parallelRuns: 100
+runFor: 30m
+```
+
+For MongoDB, the connection string should be in the following format:
+```yaml
+dbType: postgres
+connection: "mongodb://root:example@localhost:27017/"
+query: |
+    {"insert": "users", "documents": [{ "user": "abc123", "status": "A" }]}
 parallelRuns: 100
 runFor: 30m
 ```
