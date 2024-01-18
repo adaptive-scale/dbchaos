@@ -36,6 +36,7 @@ query: |
     {"insert": "users", "documents": [{ "user": "abc123", "status": "A" }]}
 parallelRuns: 100
 runFor: 30m
+dbName: users
 ```
 
 To run the above config file:
