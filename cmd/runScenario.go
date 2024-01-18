@@ -4,11 +4,11 @@ Copyright © 2023 NAME HERE <EMAIL ADDRESS>
 package cmd
 
 import (
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/adaptive-scale/dbchaos/pkg/config"
-
 	"github.com/spf13/cobra"
 )
 
@@ -40,9 +40,22 @@ Run as follows:
 dbchaos runScenario
 `,
 	Run: func(cmd *cobra.Command, args []string) {
-		d, err := os.ReadFile("./scenario.yaml")
+		file, err := cmd.Flags().GetString("file")
 		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
+			os.Exit(1)
+		}
+		var d []byte
+		if file != "" {
+			d, err = os.ReadFile(file)
+			if err != nil {
+				log.Fatal(err)
+			}
+		} else {
+			d, err = os.ReadFile("./scenario.yaml")
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 		s1 := config.ParseScenario(d)
 		s1.Start()
@@ -50,6 +63,7 @@ dbchaos runScenario
 }
 
 func init() {
+	runScenarioCmd.PersistentFlags().String("file", "scenario.yaml", "Scenario yaml file to use")
 	rootCmd.AddCommand(runScenarioCmd)
 
 	// Here you will define your flags and configuration settings.

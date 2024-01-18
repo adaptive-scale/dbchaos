@@ -10,7 +10,7 @@ go install github.com/adaptive-scale/dbchaos@v0.4.1
 
 ### Run your first test
 
-Create a file name `config.yaml` with the following content:
+Create a file named `config.yaml` with the following content:
 ```yaml
 dbType: postgres
 connection: "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
