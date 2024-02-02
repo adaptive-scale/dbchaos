@@ -1,0 +1,6 @@
+dbType: postgres
+connection: "<username>:<password>@tcp(127.0.0.1:15432)/pagila"
+query: |
+    DELETE FROM actor where actor_id = FLOOR(16000 + random() * 10000)
+parallelRuns: 1
+runFor: 30m 
