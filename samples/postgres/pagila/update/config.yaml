@@ -1,0 +1,6 @@
+dbType: postgres 
+connection: "<username>:<password>@tcp(127.0.0.1:15432)/employees"
+query: |
+	update payment set amount = amount+0.01 where payment_id=floor(10000*random() + 16000);
+parallelRuns: 1
+runFor: 10m 

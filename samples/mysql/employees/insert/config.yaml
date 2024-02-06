@@ -1,0 +1,11 @@
+dbType: mysql
+connection: "<username>:<password>@tcp(127.0.0.1:13306)/employees"
+query: |
+    INSERT INTO employees (emp_no, first_name, last_name, birth_date, hire_date, gender)
+    VALUES
+        (FLOOR(600000 + RAND() * 100000), SUBSTRING(MD5(RAND()) FROM 1 FOR 5), SUBSTRING(MD5(RAND()) FROM 1 FOR 5), 
+         DATE_FORMAT(FROM_UNIXTIME(UNIX_TIMESTAMP('1990-01-01') + RAND() * (UNIX_TIMESTAMP('2000-01-01') - UNIX_TIMESTAMP('1990-01-01'))), '%Y-%m-%d'),
+         DATE_FORMAT(FROM_UNIXTIME(UNIX_TIMESTAMP('2010-01-01') + RAND() * (UNIX_TIMESTAMP('2022-01-01') - UNIX_TIMESTAMP('2010-01-01'))), '%Y-%m-%d'),
+         CASE WHEN RAND() > 0.5 THEN 'M' ELSE 'F' END);
+parallelRuns: 1
+runFor: 10m 
