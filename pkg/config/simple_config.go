@@ -9,9 +9,6 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"gopkg.in/yaml.v3"
-	"gorm.io/driver/mysql"
-	"gorm.io/driver/postgres"
-	"gorm.io/driver/sqlserver"
 	"gorm.io/gorm"
 )
 
@@ -32,21 +29,19 @@ type Randomize struct {
 }
 
 type SimpleConfiguration struct {
-	DbType           string        `json:"db_type" yaml:"dbType"`
-	DbName           string        `json:"db_name" yaml:"dbName"`
-	Collection       string        `json:"collection" yaml:"collection"`
-	ConnectionString string        `json:"connection_string" yaml:"connection,omitempty"`
-	Query            string        `json:"query" yaml:"query"`
-	ParallelRuns     int           `json:"parallel_runs" yaml:"parallelRuns,omitempty"`
-	RunFor           string        `json:"run_for" yaml:"runFor,omitempty"`
-	CoolOffTime      int           `json:"coolOffTime" yaml:"coolOffTime,omitempty"`
-	Randomize        Randomize     `json:"randomize" yaml:"randomize,omitempty"`
-	QueryType        string        `json:"query_type" yaml:"queryType"`             // Applies to MongoDB Only
-	SortQuery        string        `json:"sort_query" yaml:"sortQuery"`             // Applies to MongoDB Only
-	SkipNumber       int           `json:"skip_number" yaml:"skipNumber"`           // Applies to MongoDB Only
-	LimitNumber      int           `json:"limit_number" yaml:"limitNumber"`         // Applies to MongoDB Only
-	ProjectionQuery  string        `json:"projection_query" yaml:"projectionQuery"` // Applies to MongoDB Only
-	Docs             []interface{} `json:"docs" yaml:"docs"`                        // Applies to NoSQL Databases Only
+	Connection
+	Collection      string        `json:"collection" yaml:"collection"`
+	Query           string        `json:"query" yaml:"query"`
+	ParallelRuns    int           `json:"parallel_runs" yaml:"parallelRuns,omitempty"`
+	RunFor          string        `json:"run_for" yaml:"runFor,omitempty"`
+	CoolOffTime     int           `json:"coolOffTime" yaml:"coolOffTime,omitempty"`
+	Randomize       Randomize     `json:"randomize" yaml:"randomize,omitempty"`
+	QueryType       string        `json:"query_type" yaml:"queryType"`             // Applies to MongoDB Only
+	SortQuery       string        `json:"sort_query" yaml:"sortQuery"`             // Applies to MongoDB Only
+	SkipNumber      int           `json:"skip_number" yaml:"skipNumber"`           // Applies to MongoDB Only
+	LimitNumber     int           `json:"limit_number" yaml:"limitNumber"`         // Applies to MongoDB Only
+	ProjectionQuery string        `json:"projection_query" yaml:"projectionQuery"` // Applies to MongoDB Only
+	Docs            []interface{} `json:"docs" yaml:"docs"`                        // Applies to NoSQL Databases Only
 	//RequestPerSecond int64     `yaml:"requestPerSecond" json:"requestPerSecond"`
 }
 
@@ -63,42 +58,12 @@ func (s *SimpleConfiguration) Start() error {
 	var d *gorm.DB
 	var err error
 	switch s.DbType {
-	case MySQL:
+	case MySQL, Postgres, SQLServer:
 		{
-			d, err = gorm.Open(mysql.Open(s.ConnectionString), &gorm.Config{})
+			d, err = s.NewClient()
 			if err != nil {
 				return err
 			}
-			sqlDB, _ := d.DB()
-
-			sqlDB.SetMaxIdleConns(10)
-			sqlDB.SetMaxOpenConns(100)
-			sqlDB.SetConnMaxLifetime(time.Hour)
-
-		}
-	case Postgres:
-		{
-			d, err = gorm.Open(postgres.Open(s.ConnectionString), &gorm.Config{})
-			if err != nil {
-				return err
-			}
-			sqlDB, _ := d.DB()
-
-			sqlDB.SetMaxIdleConns(10)
-			sqlDB.SetMaxOpenConns(100)
-			sqlDB.SetConnMaxLifetime(time.Hour)
-		}
-	case SQLServer:
-		{
-			d, err = gorm.Open(sqlserver.Open(s.ConnectionString), &gorm.Config{})
-			if err != nil {
-				return err
-			}
-			sqlDB, _ := d.DB()
-
-			sqlDB.SetMaxIdleConns(10)
-			sqlDB.SetMaxOpenConns(100)
-			sqlDB.SetConnMaxLifetime(time.Hour)
 		}
 	case MongoDB:
 		{
