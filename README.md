@@ -5,7 +5,7 @@ Stress-test your database with pre-defined queries. Validate slow and expensive 
 ### Installation
 
 ```shell
-go install github.com/adaptive-scale/dbchaos@v0.4.1
+go install github.com/adaptive-scale/dbchaos@v0.4.2
 ```
 
 #### Supported Databases
@@ -30,12 +30,13 @@ runFor: 30m
 
 For MongoDB, the connection string should be in the following format:
 ```yaml
-dbType: postgres
+dbType: mongodb
 connection: "mongodb://root:example@localhost:27017/"
 query: |
     {"insert": "users", "documents": [{ "user": "abc123", "status": "A" }]}
 parallelRuns: 100
 runFor: 30m
+dbName: users
 ```
 
 To run the above config file:

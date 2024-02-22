@@ -1,0 +1,11 @@
+dbType: postgres
+connection: "<username>:<password>@tcp(127.0.0.1:15432)/employees"
+query: |
+	INSERT INTO actor (first_name, last_name, last_update)
+	VALUES (
+	  md5(random()::text),
+	  md5(random()::text),
+	  NOW()
+	);
+parallelRuns: 1
+runFor: 10m 
