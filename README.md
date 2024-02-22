@@ -103,3 +103,8 @@ rows:
   minRows: 100
   maxRows: 1000
 ```
+
+Save above config as `config.yaml` and run the following command:
+```shell
+dbchaos generate
+```
