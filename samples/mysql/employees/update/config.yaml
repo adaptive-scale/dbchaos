@@ -1,0 +1,6 @@
+dbType: mysql
+connection: "<username>:<password>@tcp(127.0.0.1:13306)/employees"
+query: |
+    update employees set first_name=upper(first_name), last_name=upper(last_name) where emp_no=FLOOR(600000 + RAND() * 100000)
+parallelRuns: 1
+runFor: 10m 
