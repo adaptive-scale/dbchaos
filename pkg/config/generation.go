@@ -12,10 +12,13 @@ import (
 	"time"
 )
 
-type Generation struct {
+type SchemaGeneration struct {
 	// Name of the generation
-	Connection
-	StaticSchemaGeneration
+	Connection Connection             `json:"connection,omitempty" yaml:"connection,omitempty"`
+	Schema     StaticSchemaGeneration `json:"schema,omitempty" yaml:"schema,omitempty"`
+	DryRun     bool                   `json:"dry_run,omitempty" yaml:"dryRun,omitempty"`
+	Tables     TableGeneration        `json:"tables,omitempty" yaml:"tables,omitempty"`
+	Rows       DataGeneration         `json:"rows,omitempty" yaml:"rows,omitempty"`
 }
 
 type StaticSchemaGeneration struct {
@@ -23,7 +26,6 @@ type StaticSchemaGeneration struct {
 	GenerateTables bool   `json:"generate_tables,omitempty" yaml:"generateTables,omitempty"`
 	Language       string `json:"language,omitempty" yaml:"language,omitempty"`
 	DryRun         bool   `json:"dry_run,omitempty" yaml:"dryRun,omitempty"`
-	TableGeneration
 }
 
 type internalTable struct {
@@ -129,9 +131,9 @@ func randomizeType() TypeInterface {
 	}
 }
 
-func (g StaticSchemaGeneration) GenerateSchema() error {
+func (g SchemaGeneration) GenerateSchema() error {
 
-	totalSchema := g.NumberOfSchema
+	totalSchema := g.Schema.NumberOfSchema
 
 	var schemas []string
 
@@ -140,18 +142,18 @@ func (g StaticSchemaGeneration) GenerateSchema() error {
 		schemas = append(schemas, "CREATE SCHEMA "+name)
 	}
 
-	fmt.Println("Schema Generation Completed. Generated", totalSchema, "Schema(s)")
+	fmt.Println("Schema SchemaGeneration Completed. Generated", totalSchema, "Schema(s)")
 	fmt.Println(schemas)
 
 	var tableNames []string
 
 	var tables []internalTable
 
-	if g.GenerateTables {
-		for i := 0; i < g.NumberOfTables; i++ {
+	if g.Schema.GenerateTables {
+		for i := 0; i < g.Tables.NumberOfTables; i++ {
 			tableName := namesgenerator.GetRandomName(2)
 			rand.Seed(time.Now().UnixNano())
-			randomNumber := rand.Intn(g.MaxColumns-g.MinColumns+1) + g.MinColumns // rand.Intn(n) generates a number in [0, n)
+			randomNumber := rand.Intn(g.Tables.MaxColumns-g.Tables.MinColumns+1) + g.Tables.MinColumns // rand.Intn(n) generates a number in [0, n)
 
 			var table internalTable
 
@@ -176,10 +178,10 @@ func (g StaticSchemaGeneration) GenerateSchema() error {
 
 	fmt.Println("populating tables")
 
-	if g.PopulateTable {
+	if g.Tables.PopulateTable {
 		for _, t := range tables {
 			rand.Seed(time.Now().UnixNano())
-			randomNumber := rand.Intn(g.MaxRows-g.MinRows+1) + g.MinRows // rand.Intn(n) generates a number in [0, n)
+			randomNumber := rand.Intn(g.Rows.MaxRows-g.Rows.MinRows+1) + g.Rows.MinRows // rand.Intn(n) generates a number in [0, n)
 			insertQueries = append(insertQueries, t.String(randomNumber))
 		}
 	}
@@ -228,13 +230,12 @@ func (g StaticSchemaGeneration) GenerateSchema() error {
 }
 
 type TableGeneration struct {
-	Connection
-	SchemaName     string `json:"schema_name,omitempty" yaml:"schemaName,omitempty"`
-	NumberOfTables int    `json:"number_of_tables,omitempty" yaml:"numberOfTables,omitempty"`
-	MinColumns     int    `json:"min_columns,omitempty" yaml:"minColumns,omitempty"`
-	MaxColumns     int    `json:"max_columns,omitempty" yaml:"maxColumns,omitempty"`
-	PopulateTable  bool   `json:"populate_table,omitempty" yaml:"populateTable,omitempty"`
-	DataGeneration
+	Connection     Connection `json:"connection,omitempty" yaml:"connection,omitempty"`
+	SchemaName     string     `json:"schema_name,omitempty" yaml:"schemaName,omitempty"`
+	NumberOfTables int        `json:"number_of_tables,omitempty" yaml:"numberOfTables,omitempty"`
+	MinColumns     int        `json:"min_columns,omitempty" yaml:"minColumns,omitempty"`
+	MaxColumns     int        `json:"max_columns,omitempty" yaml:"maxColumns,omitempty"`
+	PopulateTable  bool       `json:"populate_table,omitempty" yaml:"populateTable,omitempty"`
 }
 
 func (g TableGeneration) GenerateTables() error {
@@ -243,10 +244,10 @@ func (g TableGeneration) GenerateTables() error {
 }
 
 type DataGeneration struct {
-	Connection
-	TableName string `json:"table_name,omitempty" yaml:"tableName,omitempty"`
-	MinRows   int    `json:"min_rows,omitempty" yaml:"minRows,omitempty"`
-	MaxRows   int    `json:"max_rows,omitempty" yaml:"maxRows,omitempty"`
+	Connection Connection `json:"connection,omitempty" yaml:"connection,omitempty"`
+	TableName  string     `json:"table_name,omitempty" yaml:"tableName,omitempty"`
+	MinRows    int        `json:"min_rows,omitempty" yaml:"minRows,omitempty"`
+	MaxRows    int        `json:"max_rows,omitempty" yaml:"maxRows,omitempty"`
 }
 
 func (g DataGeneration) GenerateData() error {
