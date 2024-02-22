@@ -23,57 +23,13 @@ var generateCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		schema, err := cmd.Flags().GetBool("schema")
-		if err != nil {
+		var schemaConfig config.SchemaGeneration
+		if err := yaml.Unmarshal(d, &schemaConfig); err != nil {
 			log.Fatal(err)
 		}
-
-		table, err := cmd.Flags().GetBool("table")
+		err = schemaConfig.GenerateSchema()
 		if err != nil {
 			log.Fatal(err)
-		}
-
-		data, err := cmd.Flags().GetBool("data")
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if schema {
-			var schemaConfig config.StaticSchemaGeneration
-			if err := yaml.Unmarshal(d, &schemaConfig); err != nil {
-				log.Fatal(err)
-			}
-			err = schemaConfig.GenerateSchema()
-			if err != nil {
-				log.Fatal(err)
-			}
-		} else if table {
-			var tableConfig []config.TableGeneration
-			if err := yaml.Unmarshal(d, &tableConfig); err != nil {
-				log.Fatal(err)
-			}
-
-			for _, t := range tableConfig {
-				err = t.GenerateTables()
-				if err != nil {
-					log.Fatal(err)
-				}
-			}
-
-		} else if data {
-			var dataConfig []config.DataGeneration
-			if err := yaml.Unmarshal(d, &dataConfig); err != nil {
-				log.Fatal(err)
-			}
-
-			for _, d := range dataConfig {
-				err = d.GenerateData()
-				if err != nil {
-					log.Fatal(err)
-				}
-			}
-		} else {
-			log.Fatal("Please specify the type of generation")
 		}
 
 	},
@@ -92,7 +48,4 @@ func init() {
 	// is called directly, e.g.:
 	// generateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
-	generateCmd.PersistentFlags().Bool("schema", false, "Config yaml file to use")
-	generateCmd.PersistentFlags().Bool("table", false, "Config yaml file to use")
-	generateCmd.PersistentFlags().Bool("data", false, "Config yaml file to use")
 }
