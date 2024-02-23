@@ -14,7 +14,7 @@ go install github.com/adaptive-scale/dbchaos@v0.4.4
 
 ### Supported Databases
 
-| Database  | Sythetic Event Generation | Synthetic Data Generation    |
+| Database  | Synthetic Event Generation | Synthetic Data Generation    |
 | ------------- | -----------------------|-------------------------------|
 | Postgres | ✅ | ✅ |
 | MySQL  | ✅  | ✅ |
