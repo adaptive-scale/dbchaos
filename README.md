@@ -12,17 +12,23 @@ Stress-test your database with pre-defined queries, generate synthetic data in y
 go install github.com/adaptive-scale/dbchaos@v0.4.3
 ```
 
-#### Supported Databases
+### Supported Databases
 
-| Database  | Sythentic Event Generation | Synthentic Data Generation    |
+| Database  | Sythetic Event Generation | Synthetic Data Generation    |
 | ------------- | -----------------------|-------------------------------|
 | Postgres | ✅ | ✅ |
 | MySQL  | ✅  | ✅ |
 | SQL Server  | ✅  | ✅ |
 | MongoDB  | ✅  | ⛔ |
 
+### Synthetic Event Generation
+With DBChaos, you can run parallel queries on your target database. There two ways you could do that - test and scenarios.
 
-### Run your first test
+With test, you can run single query on your target database. It would run the query parallely for the given amount of time. With Scenario, you could run multiple queries with different timeout and rates creating diverse load patterns.
+
+We are planning to add more features around creating various load patterns.
+
+#### Run your first test
 
 Create a file named `config.yaml` with the following content:
 ```yaml
