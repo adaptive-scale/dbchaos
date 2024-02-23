@@ -147,7 +147,6 @@ func (s *SchemaName) Create() string {
 func (g SchemaGeneration) GenerateSchema() error {
 
 	totalSchema := g.Schema.NumberOfSchema
-
 	var schemas []SchemaName
 
 	for i := 0; i < totalSchema; i++ {

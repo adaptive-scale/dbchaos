@@ -9,11 +9,13 @@ import (
 	"github.com/spf13/cobra"
 )
 
+const VERSION = "v0.4.4"
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "dbchaos",
 	Short: "DBChaos allows users to run queries in parallel on the database",
-	Long: `DBChaos allows users to run queries in parallel on the database.
+	Long: `DBChaos  (` + VERSION + `) allows users to run queries in parallel on the database.
 dbchaos -h for help
 `,
 	// Uncomment the following line if your bare application
