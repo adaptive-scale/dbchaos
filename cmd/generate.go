@@ -18,20 +18,21 @@ var generateCmd = &cobra.Command{
 	Long:  `generates synthetic data for generating schema, tables and dat`,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		d, err := os.ReadFile("config.yaml")
+		configFile, _ := cmd.Flags().GetString("config")
+
+		d, err := os.ReadFile(configFile)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		var schemaConfig config.SchemaGeneration
 		if err := yaml.Unmarshal(d, &schemaConfig); err != nil {
-			log.Fatal(err)
+			log.Fatal("invalid schema configuration -", err)
 		}
 		err = schemaConfig.GenerateSchema()
 		if err != nil {
 			log.Fatal(err)
 		}
-
 	},
 }
 
@@ -48,4 +49,5 @@ func init() {
 	// is called directly, e.g.:
 	// generateCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
+	generateCmd.Flags().String("config", "config.yaml", "config file (default is config.yaml)")
 }

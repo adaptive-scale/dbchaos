@@ -1,2 +1,4 @@
 *.yaml
 .idea/*
+*.iml
+bin/*

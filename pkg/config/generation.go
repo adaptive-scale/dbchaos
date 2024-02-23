@@ -25,6 +25,7 @@ type StaticSchemaGeneration struct {
 	NumberOfSchema int    `json:"number_of_schema,omitempty" yaml:"numberOfSchema,omitempty"`
 	GenerateTables bool   `json:"generate_tables,omitempty" yaml:"generateTables,omitempty"`
 	Language       string `json:"language,omitempty" yaml:"language,omitempty"`
+	SchemaName     string `json:"schema_name,omitempty" yaml:"schemaName,omitempty"`
 	DryRun         bool   `json:"dry_run,omitempty" yaml:"dryRun,omitempty"`
 }
 
@@ -131,15 +132,29 @@ func randomizeType() TypeInterface {
 	}
 }
 
+type SchemaName struct {
+	Name string
+}
+
+func (s *SchemaName) String() string {
+	return s.Name
+}
+
+func (s *SchemaName) Create() string {
+	return "CREATE SCHEMA " + s.Name
+}
+
 func (g SchemaGeneration) GenerateSchema() error {
 
 	totalSchema := g.Schema.NumberOfSchema
 
-	var schemas []string
+	var schemas []SchemaName
 
 	for i := 0; i < totalSchema; i++ {
-		name := namesgenerator.GetRandomName(2)
-		schemas = append(schemas, "CREATE SCHEMA "+name)
+		rand.Seed(time.Now().UnixNano())
+		a := rand.Intn(10)
+		name := namesgenerator.GetRandomName(a)
+		schemas = append(schemas, SchemaName{Name: name})
 	}
 
 	fmt.Println("Schema SchemaGeneration Completed. Generated", totalSchema, "Schema(s)")
@@ -150,27 +165,68 @@ func (g SchemaGeneration) GenerateSchema() error {
 	var tables []internalTable
 
 	if g.Schema.GenerateTables {
-		for i := 0; i < g.Tables.NumberOfTables; i++ {
-			tableName := namesgenerator.GetRandomName(2)
-			rand.Seed(time.Now().UnixNano())
-			randomNumber := rand.Intn(g.Tables.MaxColumns-g.Tables.MinColumns+1) + g.Tables.MinColumns // rand.Intn(n) generates a number in [0, n)
+		if g.Schema.SchemaName == "" {
+			for _, s := range schemas {
+				for i := 0; i < g.Tables.NumberOfTables; i++ {
 
-			var table internalTable
+					rand.Seed(time.Now().UnixNano())
+					a := rand.Intn(10)
+					tableName := namesgenerator.GetRandomName(a)
+					rand.Seed(time.Now().UnixNano())
+					randomNumber := rand.Intn(g.Tables.MaxColumns-g.Tables.MinColumns+1) + g.Tables.MinColumns // rand.Intn(n) generates a number in [0, n)
 
-			table.TableName = tableName
+					var table internalTable
 
-			var fields []string
-			for j := 0; j < randomNumber; j++ {
-				fieldName := namesgenerator.GetRandomName(2)
-				typeVal := randomizeType()
+					table.TableName = s.String() + "." + tableName
 
-				table.Fields = append(table.Fields, Field{Name: fieldName, Type: typeVal})
-				fields = append(fields, fieldName+" "+typeVal.name())
+					var fields []string
+					for j := 0; j < randomNumber; j++ {
+
+						rand.Seed(time.Now().UnixNano())
+						a := rand.Intn(10)
+
+						fieldName := namesgenerator.GetRandomName(a)
+						typeVal := randomizeType()
+
+						table.Fields = append(table.Fields, Field{Name: fieldName, Type: typeVal})
+						fields = append(fields, fieldName+" "+typeVal.name())
+					}
+
+					tables = append(tables, table)
+
+					tableNames = append(tableNames, "CREATE TABLE "+s.String()+"."+tableName+" ("+strings.Join(fields, ",")+")")
+				}
 			}
+		} else {
+			for i := 0; i < g.Tables.NumberOfTables; i++ {
 
-			tables = append(tables, table)
+				rand.Seed(time.Now().UnixNano())
+				a := rand.Intn(10)
 
-			tableNames = append(tableNames, "CREATE TABLE "+tableName+" ("+strings.Join(fields, ",")+")")
+				tableName := namesgenerator.GetRandomName(a)
+				rand.Seed(time.Now().UnixNano())
+				randomNumber := rand.Intn(g.Tables.MaxColumns-g.Tables.MinColumns+1) + g.Tables.MinColumns // rand.Intn(n) generates a number in [0, n)
+
+				var table internalTable
+
+				table.TableName = g.Schema.SchemaName + "." + tableName
+
+				var fields []string
+				for j := 0; j < randomNumber; j++ {
+
+					rand.Seed(time.Now().UnixNano())
+					a := rand.Intn(10)
+
+					fieldName := namesgenerator.GetRandomName(a)
+					typeVal := randomizeType()
+
+					table.Fields = append(table.Fields, Field{Name: fieldName, Type: typeVal})
+					fields = append(fields, fieldName+" "+typeVal.name())
+				}
+
+				tables = append(tables, table)
+				tableNames = append(tableNames, "CREATE TABLE "+g.Schema.SchemaName+"."+tableName+" ("+strings.Join(fields, ",")+")")
+			}
 		}
 	}
 
@@ -188,7 +244,7 @@ func (g SchemaGeneration) GenerateSchema() error {
 
 	if g.DryRun {
 		for _, s := range schemas {
-			fmt.Println(s)
+			fmt.Println(s.Create())
 		}
 
 		for _, t := range tableNames {
@@ -208,7 +264,7 @@ func (g SchemaGeneration) GenerateSchema() error {
 			return err
 		}
 		for _, s := range schemas {
-			if err = d.Exec(s).Error; err != nil {
+			if err = d.Exec(s.Create()).Error; err != nil {
 				log.Println(err)
 			}
 		}
@@ -231,7 +287,6 @@ func (g SchemaGeneration) GenerateSchema() error {
 
 type TableGeneration struct {
 	Connection     Connection `json:"connection,omitempty" yaml:"connection,omitempty"`
-	SchemaName     string     `json:"schema_name,omitempty" yaml:"schemaName,omitempty"`
 	NumberOfTables int        `json:"number_of_tables,omitempty" yaml:"numberOfTables,omitempty"`
 	MinColumns     int        `json:"min_columns,omitempty" yaml:"minColumns,omitempty"`
 	MaxColumns     int        `json:"max_columns,omitempty" yaml:"maxColumns,omitempty"`
