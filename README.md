@@ -4,7 +4,7 @@ The only database and data testing tool you will ever need.
 
 Stress-test your database with pre-defined queries. Validate slow and expensive queries that breaks your database.
 
-### Feature
+### Features
 - Synthetic Event Generation
 - Synthentic Data Generation
   
