@@ -9,7 +9,7 @@ Stress-test your database with pre-defined queries, generate synthetic data in y
 ### Installation
 
 ```shell
-go install github.com/adaptive-scale/dbchaos@v0.4.3
+go install github.com/adaptive-scale/dbchaos@v0.4.4
 ```
 
 ### Supported Databases
