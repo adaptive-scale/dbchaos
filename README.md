@@ -11,8 +11,8 @@ go install github.com/adaptive-scale/dbchaos@v0.4.2
 
 #### Supported Databases
 
-- Postgres
-- MySQL
+- [Postgres](https://github.com/adaptive-scale/dbchaos/tree/master/samples/postgres)
+- [MySQL](https://github.com/adaptive-scale/dbchaos/tree/master/samples/mysql)
 - MongoDB
 - SQL Server
 
