@@ -74,8 +74,7 @@ To run the above scenario file:
 dbchaos runScenario 
 ```
 
-### MongoDB Specific:
-Example `scenario.yaml` file: 
+For MongoDB Specific, an example `scenario.yaml` file would look as follows : 
 ```yaml
 dbType: mongodb
 connection: "mongodb://root:example@localhost:27017/"
