@@ -1,8 +1,6 @@
 # DBChaos
-
-The only database and data testing tool you will ever need. 
-
-Stress-test your database with pre-defined queries. Validate slow and expensive queries that breaks your database.
+ 
+Stress-test your database with pre-defined queries, generate synthetic data in your database. Validate slow and expensive queries that breaks your database.
 
 ### Features
 - Synthetic Event Generation
@@ -11,7 +9,7 @@ Stress-test your database with pre-defined queries. Validate slow and expensive 
 ### Installation
 
 ```shell
-go install github.com/adaptive-scale/dbchaos@v0.4.2
+go install github.com/adaptive-scale/dbchaos@v0.4.3
 ```
 
 #### Supported Databases
