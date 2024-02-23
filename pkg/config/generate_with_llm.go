@@ -6,6 +6,7 @@ import (
 	"github.com/adaptive-scale/dbchaos/pkg/generatewithllm"
 	openai_dbchaos "github.com/adaptive-scale/dbchaos/pkg/openai"
 	"os"
+	"strings"
 	"time"
 )
 
@@ -44,7 +45,7 @@ func (s *SchemaGenerationWithLLM) generateDataWithOpenAI(apiToken string) error 
 		APIkey: apiToken,
 	}
 
-	schemaValue := generatewithllm.KnownSchema[s.SchemaType]
+	schemaValue := generatewithllm.KnownSchema[strings.ToLower(s.SchemaType)]
 
 	if schemaValue == "" {
 		v, err := o.Prompt(fmt.Sprintf(PromptTemplateForGenerateSchema, s.SchemaType))
