@@ -14,10 +14,13 @@ go install github.com/adaptive-scale/dbchaos@v0.4.3
 
 #### Supported Databases
 
-- [Postgres](https://github.com/adaptive-scale/dbchaos/tree/master/samples/postgres)
-- [MySQL](https://github.com/adaptive-scale/dbchaos/tree/master/samples/mysql)
-- MongoDB
-- SQL Server
+| Database  | Sythentic Event Generation | Synthentic Data Generation    |
+| ------------- | -----------------------|-------------------------------|
+| Postgres | ✅ | ✅ |
+| MySQL  | ✅  | ✅ |
+| SQL Server  | ✅  | ✅ |
+| MongoDB  | ✅  | ⛔ |
+
 
 ### Run your first test
 
@@ -49,7 +52,7 @@ To run the above config file:
 dbchaos runTest 
 ```
 
-### Run bunch of queries in parallel
+#### Run bunch of queries in parallel
 
 Create a file called `scenario.yaml` with the following content:
 
@@ -85,10 +88,16 @@ scenarios:
 dbName: users   #(MongoDB only)
 ```
 
-### Static Synthetic Data Generation
+### Synthetic Data Generation
+DBChaos can generate full schema and synthetic data for your database. In DBChaos, there are two kinds of data generation techniques - Static and GPT-based. 
 
-DBChaos can also generate full schema and synthetic data for your database.
+In static data generation, dbchaos randomly generates schema, schema name, column names and data. It comes very handy and is inexpensive if you want to create huge schemas and generate large amount data. For instance, At [Adaptive](https://adaptive.live) we use this is create unrealistic sized databases and schema to load testing our services and processes.
 
+In GPT based data generation, you can create hyper-realistic databases and data. However, you would need an API key from OPENAI as well as it will cost you credits if you which to generate huge amount to data. We have tried to build a known schema cache in the product, which we will keep improving as well built out more features. 
+
+#### Static Data Generation
+
+A configuration for static generation looks as follows:
 ```yaml
 connection: 
   dbType: postgres
@@ -113,9 +122,9 @@ Save above config as `config.yaml` and run the following command:
 dbchaos generate
 ```
 
-### Synthetic Data Generation With GPT
+#### GPT-based Synthetic Data Generation 
 
-DBChaos can also generate full schema and synthetic data for your database using GPT/LLM models.
+Configuration for GPT-based synthetic data looks as follows:
 
 ```yaml
 connection: 
@@ -127,7 +136,7 @@ model: gpt-3.5-turbo
 schema_type: webshop # can be anything word like ecommerce, webshop, hospital etc
 ```
 
-Also, you have to set your OpenAI API key as an environment variable `OPENAI_API_KEY`.
+You have to set your OpenAI API key as an environment variable `OPENAI_API_KEY`.
 
 Save above config as `config.yaml` and run the following command:
 ```shell
