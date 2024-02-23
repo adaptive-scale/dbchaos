@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/adaptive-scale/dbchaos/pkg/generatewithllm"
 	openai_dbchaos "github.com/adaptive-scale/dbchaos/pkg/openai"
+	"log"
 	"os"
 	"strings"
 	"time"
@@ -14,7 +15,6 @@ type SchemaGenerationWithLLM struct {
 	Connection       Connection `yaml:"connection,omitempty"`
 	Provider         string     `yaml:"provider,omitempty"`
 	Model            string     `yaml:"model,omitempty"`
-	Schema           string     `yaml:"schema,omitempty"`
 	SchemaType       string     `yaml:"schema_type,omitempty"`
 	InsertIterations int        `yaml:"insert_iterations,omitempty"`
 	DryRun           bool       `yaml:"dry_run,omitempty"`
@@ -22,11 +22,19 @@ type SchemaGenerationWithLLM struct {
 }
 
 const (
-	PromptTemplateForGenerateSchema = "Generate Schema in SQL for %v database. Give me only SQL Commands No text."
+	PromptTemplateForGenerateSchema = "Generate Schema in SQL for %v database. Give me only SQL Commands No text. Make tables with foreign key references are at the end."
 	PromptTemplateForInsertData     = "Also generate the 100 SQL commands insert randomized data into the %v. Give me only SQL Commands No text."
 )
 
 func (s *SchemaGenerationWithLLM) GenerateSchema(apiToken string) error {
+
+	totalWords := strings.Split(s.SchemaType, " ")
+	if len(totalWords) > 1 {
+		return errors.New("schema type can only be one word")
+	}
+
+	log.Println("starting schema generation with LLM")
+
 	switch s.Provider {
 	case "openai":
 		return s.generateDataWithOpenAI(apiToken)
@@ -45,6 +53,8 @@ func (s *SchemaGenerationWithLLM) generateDataWithOpenAI(apiToken string) error 
 		APIkey: apiToken,
 	}
 
+	log.Println("generating schema")
+
 	schemaValue := generatewithllm.KnownSchema[strings.ToLower(s.SchemaType)]
 
 	if schemaValue == "" {
@@ -61,6 +71,8 @@ func (s *SchemaGenerationWithLLM) generateDataWithOpenAI(apiToken string) error 
 		s.InsertIterations = 1
 	}
 
+	log.Println("generating data")
+
 	for i := 0; i < s.InsertIterations; i++ {
 		// Insert data
 		data, err := o.Prompt(fmt.Sprintf(PromptTemplateForInsertData, schemaValue))
@@ -75,20 +87,24 @@ func (s *SchemaGenerationWithLLM) generateDataWithOpenAI(apiToken string) error 
 	queries := schemaValue + "\n--insert data\n" + dataVal
 
 	if s.PersistSchema != "" {
-		err := os.WriteFile("schema.sql", []byte(queries), 0644)
+
+		log.Println("saving commands to file to " + s.PersistSchema)
+
+		err := os.WriteFile(s.PersistSchema, []byte(queries), 0644)
 		if err != nil {
 			return err
 		}
 	}
 
-	d, err := s.Connection.NewClient()
-	if err != nil {
-		return err
-	}
-
 	if s.DryRun {
 		fmt.Println(queries)
 	} else {
+		d, err := s.Connection.NewClient()
+		if err != nil {
+			return err
+		}
+
+		log.Println("executing commands")
 
 		fmt.Println(queries)
 

@@ -1,15 +1,7 @@
 package generatewithllm
 
 const (
-	webshop = `CREATE TABLE Products (
-    product_id INT PRIMARY KEY,
-    product_name VARCHAR(255),
-    description TEXT,
-    price DECIMAL(10, 2),
-    stock_quantity INT,
-    category_id INT,
-    FOREIGN KEY (category_id) REFERENCES Categories(category_id)
-);
+	webshop = `
 
 CREATE TABLE Categories (
     category_id INT PRIMARY KEY,
@@ -22,13 +14,25 @@ CREATE TABLE Customers (
     first_name VARCHAR(50),
     last_name VARCHAR(50),
     email VARCHAR(100),
-    password VARCHAR(255), -- It's better to store hashed passwords
+    password VARCHAR(255),
     address VARCHAR(255),
     city VARCHAR(100),
     country VARCHAR(100),
     postal_code VARCHAR(20),
     phone_number VARCHAR(20)
 );
+
+
+CREATE TABLE Products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(255),
+    description TEXT,
+    price DECIMAL(10, 2),
+    stock_quantity INT,
+    category_id INT,
+    FOREIGN KEY (category_id) REFERENCES Categories(category_id)
+);
+
 
 CREATE TABLE Orders (
     order_id INT PRIMARY KEY,
@@ -56,19 +60,7 @@ CREATE TABLE Order_Details (
     FOREIGN KEY (product_id) REFERENCES Products(product_id)
 );`
 
-	logistics = `CREATE TABLE Shipments (
-    shipment_id INT PRIMARY KEY,
-    shipment_date DATE,
-    sender_id INT,
-    recipient_id INT,
-    delivery_status VARCHAR(50),
-    shipping_method VARCHAR(100),
-    total_weight DECIMAL(10, 2),
-    shipping_cost DECIMAL(10, 2),
-    FOREIGN KEY (sender_id) REFERENCES Customers(customer_id),
-    FOREIGN KEY (recipient_id) REFERENCES Customers(customer_id)
-);
-
+	logistics = `
 CREATE TABLE Customers (
     customer_id INT PRIMARY KEY,
     first_name VARCHAR(50),
@@ -79,6 +71,19 @@ CREATE TABLE Customers (
     country VARCHAR(100),
     postal_code VARCHAR(20),
     phone_number VARCHAR(20)
+);
+
+CREATE TABLE Shipments (
+    shipment_id INT PRIMARY KEY,
+    shipment_date DATE,
+    sender_id INT,
+    recipient_id INT,
+    delivery_status VARCHAR(50),
+    shipping_method VARCHAR(100),
+    total_weight DECIMAL(10, 2),
+    shipping_cost DECIMAL(10, 2),
+    FOREIGN KEY (sender_id) REFERENCES Customers(customer_id),
+    FOREIGN KEY (recipient_id) REFERENCES Customers(customer_id)
 );
 
 CREATE TABLE Addresses (

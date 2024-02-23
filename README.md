@@ -113,3 +113,26 @@ Save above config as `config.yaml` and run the following command:
 ```shell
 dbchaos generate
 ```
+
+### Synthetic Data Generation With GPT
+
+DBChaos can also generate full schema and synthetic data for your database using GPT/LLM models.
+
+```yaml
+connection: 
+  dbType: postgres
+  connection: "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
+dryRun: false
+provider: openai
+model: gpt-3.5-turbo
+schema_type: webshop # can be anything word like ecommerce, webshop, hospital etc
+```
+
+Also, you have to set your OpenAI API key as an environment variable `OPENAI_API_KEY`.
+
+Save above config as `config.yaml` and run the following command:
+```shell
+dbchaos generateWithLLM
+```
+
+This will generate the schemas, insert commands and persist it in the database.
