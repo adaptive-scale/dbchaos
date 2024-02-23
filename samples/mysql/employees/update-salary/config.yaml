@@ -1,6 +1,0 @@
-dbType: mysql
-connection: "<username>:<password>@tcp(127.0.0.1:13306)/employees"
-query: |
-    update salaries set salary=salary+1 where emp_no=10001 and from_date='1986-06-26';
-parallelRuns: 1
-runFor: 100m 

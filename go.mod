@@ -3,6 +3,7 @@ module github.com/adaptive-scale/dbchaos
 go 1.19
 
 require (
+	github.com/adaptive-scale/funktors v0.0.7
 	github.com/google/uuid v1.3.0
 	github.com/spf13/cobra v1.8.0
 	gopkg.in/yaml.v3 v3.0.1

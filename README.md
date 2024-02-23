@@ -81,3 +81,31 @@ scenarios:
     runFor: 15m
 dbName: users   #(MongoDB only)
 ```
+
+### Static Synthetic Data Generation
+
+DBChaos can also generate full schema and synthetic data for your database.
+
+```yaml
+connection: 
+  dbType: postgres
+  connection: "host=localhost port=5432 user=postgres password=postgres dbname=postgres sslmode=disable"
+dryRun: false
+schema: 
+  numberOfSchema: 10
+  generateTables: true
+  language: en
+tables:
+  numberOfTables: 10
+  minColumns: 5
+  maxColumns: 10
+  populateTable: true
+rows:
+  minRows: 100
+  maxRows: 1000
+```
+
+Save above config as `config.yaml` and run the following command:
+```shell
+dbchaos generate
+```

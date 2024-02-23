@@ -1,6 +1,0 @@
-dbType: mysql
-connection: "<username>:<password>@tcp(127.0.0.1:13306)/employees"
-query: |
-    DELETE FROM employees where emp_no = FLOOR(600000 + RAND() * 100000)
-parallelRuns: 1
-runFor: 30m 
