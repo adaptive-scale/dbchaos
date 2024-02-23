@@ -11,7 +11,7 @@ Stress-test your database with pre-defined queries. Validate slow and expensive 
 ### Installation
 
 ```shell
-go install github.com/adaptive-scale/dbchaos@v0.4.2
+go install github.com/adaptive-scale/dbchaos@v0.4.3
 ```
 
 #### Supported Databases
