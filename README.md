@@ -1,7 +1,9 @@
 # DBChaos
  
 Stress-test your database with pre-defined queries, generate synthetic data in your database. 
+
 Validate slow and expensive queries that breaks your database.
+
 Use GPT to generate synthetic data for you database.
 
 ### Features
